@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>로또 6/45 번호 추천</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  /* Layout: a single lottery-slip card, centered column, ticket rows A~E below the draw */
+  :root {
+    --bg: #eef1ec;
+    --paper: #fbfcf8;
+    --ink: #1f2a24;
+    --muted: #66726b;
+    --line: #d5dcd4;
+    --accent: #c8102e;
+    --ball-1: #fbc400;  /* 1~10 */
+    --ball-2: #69c8f2;  /* 11~20 */
+    --ball-3: #ff7272;  /* 21~30 */
+    --ball-4: #aaaaaa;  /* 31~40 */
+    --ball-5: #b0d840;  /* 41~45 */
+    --ball-ink: #ffffff;
+    --font-display: "Black Han Sans", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    --font-body: "Gowun Dodum", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141a17; --paper: #1d2521; --ink: #e7ece8; --muted: #9aa69f;
+      --line: #33403a; --accent: #ff5a6e; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141a17; --paper: #1d2521; --ink: #e7ece8; --muted: #9aa69f;
+    --line: #33403a; --accent: #ff5a6e; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    margin: 0;
+    background: var(--bg); color: var(--ink);
+    font-family: var(--font-body); font-size: 15px; line-height: 1.6;
+    padding-block: 32px 48px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .slip {
+    max-width: 520px; margin: 0 auto; background: var(--paper);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 28px 24px; display: grid; gap: 24px;
+  }
+  header { display: grid; gap: 4px; }
+  .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; color: var(--accent); }
+  h1 { font-family: var(--font-display); font-weight: 400; font-size: 34px; line-height: 1.15; margin: 0; text-wrap: balance; }
+  .sub { color: var(--muted); margin: 0; }
+
+  .draw { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; min-height: 56px; }
+  .ball {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--font-mono); font-weight: 600; font-size: 19px;
+    color: var(--ball-ink); text-shadow: 0 1px 2px rgba(0,0,0,.35);
+    background: radial-gradient(circle at 32% 28%, rgba(255,255,255,.55), transparent 42%), var(--c);
+    box-shadow: inset 0 -3px 6px rgba(0,0,0,.18);
+    font-variant-numeric: tabular-nums;
+  }
+  .ball.sm { width: 36px; height: 36px; font-size: 14px; }
+  .plus { align-self: center; font-family: var(--font-mono); font-weight: 600; font-size: 22px; color: var(--muted); padding: 0 2px; }
+  .plus.sm { font-size: 16px; }
+  .ball.pop { animation: pop .38s cubic-bezier(.3,1.6,.5,1) both; }
+  @keyframes pop { from { transform: scale(.3) rotate(-90deg); opacity: .2; } to { transform: none; opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .ball.pop { animation: none; } }
+
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; }
+  button {
+    font: inherit; cursor: pointer; border-radius: 10px; padding: 12px 18px;
+    border: 1px solid var(--line); background: transparent; color: var(--ink);
+  }
+  button.primary {
+    flex: 1 1 200px; background: var(--accent); border-color: var(--accent); color: #fff;
+    font-family: var(--font-display); font-size: 18px; letter-spacing: .02em;
+  }
+  button:hover { filter: brightness(1.06); }
+  button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+  .tickets { display: grid; gap: 0; border-top: 1px dashed var(--line); }
+  .tickets h2 { font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; font-weight: 500; color: var(--muted); margin: 14px 0 6px; }
+  .row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+  .row .tag { font-family: var(--font-mono); font-weight: 600; color: var(--accent); width: 18px; flex: none; }
+  .row .balls { display: flex; gap: 6px; flex-wrap: wrap; min-width: 0; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); display: inline-block; }
+  .toast { font-size: 13px; color: var(--muted); min-height: 1.6em; margin: 0; }
+  footer { font-size: 12px; color: var(--muted); }
+  @media (max-width: 420px) {
+    .slip { padding: 22px 16px; }
+    .draw { gap: 5px; }
+    .ball { width: 34px; height: 34px; font-size: 14px; }
+    .plus { font-size: 18px; padding: 0; }
+    .ball.sm { width: 30px; height: 30px; font-size: 12px; }
+    .row .balls { gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<main class="slip">
+  <header>
+    <span class="eyebrow">LOTTO 6/45 · 자동 선택</span>
+    <h1>이번 주 추천 번호</h1>
+    <p class="sub">1부터 45까지 중복 없이 6개를 뽑아 오름차순으로 보여주고, 겹치지 않는 보너스 번호 1개를 따로 붙입니다.</p>
+  </header>
+
+  <div class="draw" id="draw" aria-live="polite"></div>
+
+  <div class="controls">
+    <button class="primary" id="btn-one" type="button">번호 뽑기</button>
+    <button id="btn-five" type="button">5게임 한 번에</button>
+    <button id="btn-copy" type="button">복사</button>
+  </div>
+  <p class="toast" id="toast"></p>
+
+  <section class="tickets" id="tickets" hidden>
+    <h2>5게임 자동 (A~E)</h2>
+    <div id="rows"></div>
+  </section>
+
+  <div class="legend">
+    <span style="--c:var(--ball-1)"><i></i>1~10</span>
+    <span style="--c:var(--ball-2)"><i></i>11~20</span>
+    <span style="--c:var(--ball-3)"><i></i>21~30</span>
+    <span style="--c:var(--ball-4)"><i></i>31~40</span>
+    <span style="--c:var(--ball-5)"><i></i>41~45</span>
+  </div>
+  <footer>모든 조합의 당첨 확률은 1/8,145,060로 같습니다. 재미로만 즐겨 주세요.</footer>
+</main>
+
+<script>
+  // 1~45 중 중복 없는 6개 번호를 뽑아 오름차순 정렬
+  function pickNumbers() {
+    const pool = Array.from({ length: 45 }, (_, i) => i + 1);
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = randomInt(i + 1);
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return { main: pool.slice(0, 6).sort((a, b) => a - b), bonus: pool[6] };
+  }
+
+  // crypto가 있으면 사용, 없으면 Math.random
+  function randomInt(max) {
+    if (window.crypto && crypto.getRandomValues) {
+      const buf = new Uint32Array(1);
+      const limit = Math.floor(0x100000000 / max) * max;
+      do { crypto.getRandomValues(buf); } while (buf[0] >= limit);
+      return buf[0] % max;
+    }
+    return Math.floor(Math.random() * max);
+  }
+
+  function ballColor(n) {
+    if (n <= 10) return "var(--ball-1)";
+    if (n <= 20) return "var(--ball-2)";
+    if (n <= 30) return "var(--ball-3)";
+    if (n <= 40) return "var(--ball-4)";
+    return "var(--ball-5)";
+  }
+
+  function makeBall(n, { small = false, delay = 0 } = {}) {
+    const el = document.createElement("span");
+    el.className = "ball pop" + (small ? " sm" : "");
+    el.style.setProperty("--c", ballColor(n));
+    el.style.animationDelay = delay + "ms";
+    el.textContent = n;
+    return el;
+  }
+
+  // 본번호 6개 + "+" + 보너스 번호
+  function drawNodes(pick, { small = false, step = 90, base = 0 } = {}) {
+    const plus = document.createElement("span");
+    plus.className = "plus" + (small ? " sm" : "");
+    plus.textContent = "+";
+    plus.setAttribute("aria-label", "보너스");
+    const main = pick.main.map((n, i) => makeBall(n, { small, delay: base + i * step }));
+    return [...main, plus, makeBall(pick.bonus, { small, delay: base + 6 * step })];
+  }
+
+  function pickText(pick) {
+    return pick.main.join(", ") + " + 보너스 " + pick.bonus;
+  }
+
+  const drawEl = document.getElementById("draw");
+  const rowsEl = document.getElementById("rows");
+  const ticketsEl = document.getElementById("tickets");
+  const toastEl = document.getElementById("toast");
+  let lastText = "";
+
+  function showOne() {
+    const pick = pickNumbers();
+    drawEl.replaceChildren(...drawNodes(pick));
+    ticketsEl.hidden = true;
+    lastText = pickText(pick);
+    toastEl.textContent = "";
+  }
+
+  function showFive() {
+    const games = Array.from({ length: 5 }, pickNumbers);
+    rowsEl.replaceChildren(...games.map((nums, g) => {
+      const row = document.createElement("div");
+      row.className = "row";
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      tag.textContent = "ABCDE"[g];
+      const balls = document.createElement("div");
+      balls.className = "balls";
+      balls.append(...drawNodes(nums, { small: true, step: 40, base: g * 60 }));
+      row.append(tag, balls);
+      return row;
+    }));
+    drawEl.replaceChildren(...drawNodes(games[0]));
+    ticketsEl.hidden = false;
+    lastText = games.map((nums, g) => "ABCDE"[g] + ": " + pickText(nums)).join("\n");
+    toastEl.textContent = "";
+  }
+
+  async function copyNumbers() {
+    try {
+      await navigator.clipboard.writeText(lastText);
+      toastEl.textContent = "번호를 복사했습니다.";
+    } catch {
+      toastEl.textContent = "복사가 막혀 있어요. 번호: " + lastText.replace(/\n/g, " / ");
+    }
+  }
+
+  document.getElementById("btn-one").addEventListener("click", showOne);
+  document.getElementById("btn-five").addEventListener("click", showFive);
+  document.getElementById("btn-copy").addEventListener("click", copyNumbers);
+  showOne();
+</script>
+
+</body>
+</html>
