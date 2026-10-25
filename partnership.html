@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>제휴 문의</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1a1d23;
+      --muted: #6b7280;
+      --border: #d9dde3;
+      --accent: #f0b90b;
+      --accent-text: #1a1d23;
+      --ok: #15803d;
+      --err: #b91c1c;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1115;
+        --card: #181b21;
+        --text: #e8eaed;
+        --muted: #9aa1ac;
+        --border: #2c313a;
+        --ok: #4ade80;
+        --err: #f87171;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      line-height: 1.5;
+    }
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+    }
+    h1 { margin: 0 0 4px; font-size: 1.5rem; }
+    .lead { margin: 0 0 24px; color: var(--muted); font-size: 0.95rem; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; }
+    .req { color: var(--err); }
+    .field { margin-bottom: 16px; }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+    }
+    select option { color: #1a1d23; }
+    textarea { min-height: 140px; resize: vertical; }
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+      border-color: var(--accent);
+    }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
+    .consent { display: flex; gap: 8px; align-items: flex-start; font-size: 0.85rem; color: var(--muted); margin-bottom: 20px; }
+    .consent input { width: auto; margin-top: 3px; }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: var(--accent-text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.6; cursor: default; }
+    .status { margin-top: 14px; font-size: 0.9rem; min-height: 1.4em; }
+    .status.ok { color: var(--ok); }
+    .status.err { color: var(--err); }
+    .hp { position: absolute; left: -9999px; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>제휴 문의</h1>
+    <p class="lead">제휴·협업 제안을 남겨주시면 검토 후 입력하신 이메일로 연락드리겠습니다.</p>
+
+    <form id="partnership-form" action="https://formspree.io/f/mdeeajdj" method="POST">
+      <input type="hidden" name="_subject" value="[제휴 문의] 새 문의가 접수되었습니다">
+      <!-- 스팸 방지용 허니팟: 사람에게는 보이지 않음 -->
+      <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off">
+
+      <div class="row">
+        <div class="field">
+          <label for="name">담당자 이름 <span class="req">*</span></label>
+          <input id="name" name="name" type="text" required autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="company">회사/단체명</label>
+          <input id="company" name="company" type="text" autocomplete="organization">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="email">이메일 <span class="req">*</span></label>
+          <input id="email" name="email" type="email" required autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="phone">연락처</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="type">문의 유형 <span class="req">*</span></label>
+        <select id="type" name="type" required>
+          <option value="">선택해주세요</option>
+          <option>사업 제휴</option>
+          <option>마케팅·광고</option>
+          <option>기술 협력</option>
+          <option>투자</option>
+          <option>기타</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="message">문의 내용 <span class="req">*</span></label>
+        <textarea id="message" name="message" required placeholder="제안 내용, 기대 효과, 일정 등을 자유롭게 적어주세요."></textarea>
+      </div>
+
+      <label class="consent">
+        <input type="checkbox" name="privacy_consent" value="동의" required>
+        <span>문의 응대를 위해 입력한 개인정보(이름, 이메일, 연락처)를 수집·이용하는 데 동의합니다. <span class="req">*</span></span>
+      </label>
+
+      <button type="submit">문의 보내기</button>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </form>
+  </main>
+
+  <script>
+    // JS가 켜져 있으면 페이지 이동 없이 전송, 꺼져 있으면 일반 POST로 Formspree 페이지에서 처리됨
+    const form = document.getElementById('partnership-form');
+    const statusEl = document.getElementById('status');
+    const button = form.querySelector('button');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      statusEl.className = 'status';
+      statusEl.textContent = '전송 중…';
+      button.disabled = true;
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        if (res.ok) {
+          form.reset();
+          statusEl.className = 'status ok';
+          statusEl.textContent = '문의가 접수되었습니다. 감사합니다!';
+        } else {
+          const data = await res.json().catch(() => ({}));
+          const msg = data.errors ? data.errors.map((er) => er.message).join(', ') : '';
+          throw new Error(msg || '전송에 실패했습니다.');
+        }
+      } catch (err) {
+        statusEl.className = 'status err';
+        statusEl.textContent = (err.message || '전송에 실패했습니다.') + ' 잠시 후 다시 시도해주세요.';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
