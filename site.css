@@ -1,0 +1,97 @@
+/* 소개·가이드·정책 페이지 공용 스타일. 색과 글꼴은 index.html(로또 패턴 분석실)과 같다 */
+:root {
+  --bg: #eef1ec;
+  --paper: #fbfcf8;
+  --ink: #1f2a24;
+  --muted: #5f6b64;
+  --line: #d5dcd4;
+  --soft: #e5eae3;
+  --accent: #c8102e;
+  --font-display: "Black Han Sans", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-body: "Gowun Dodum", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141a17; --paper: #1d2521; --ink: #e7ece8; --muted: #a0aca5;
+    --line: #33403a; --soft: #27312c; --accent: #ff5a6e; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.75;
+  padding-block: 20px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; border-radius: 4px; }
+
+/* 사이트 공통 메뉴 */
+.site-nav {
+  max-width: 720px; margin: 0 auto 18px; padding: 0 4px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap;
+}
+.site-nav .brand { font-family: var(--font-display); font-size: 20px; color: var(--ink); text-decoration: none; }
+.site-nav nav { display: flex; gap: 4px; flex-wrap: wrap; }
+.site-nav nav a {
+  font-size: 14px; color: var(--ink); text-decoration: none;
+  padding: 5px 11px; border-radius: 999px; border: 1px solid transparent;
+}
+.site-nav nav a:hover { border-color: var(--line); }
+.site-nav nav a[aria-current="page"] { border-color: var(--ink); }
+
+/* 본문 */
+main.doc {
+  max-width: 720px; margin: 0 auto; background: var(--paper);
+  border: 1px solid var(--line); border-radius: 16px; padding: 32px 28px;
+}
+.doc .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; color: var(--accent); }
+.doc h1 { font-family: var(--font-display); font-weight: 400; font-size: 36px; line-height: 1.2; margin: 6px 0 10px; text-wrap: balance; }
+.doc h2 { font-family: var(--font-display); font-weight: 400; font-size: 24px; line-height: 1.3; margin: 40px 0 10px; text-wrap: balance; scroll-margin-top: 16px; }
+.doc h3 { font-size: 17px; margin: 24px 0 6px; }
+.doc p, .doc li { max-width: 64ch; }
+.doc p { margin: 0 0 14px; }
+.doc ul, .doc ol { margin: 0 0 14px; padding-left: 22px; }
+.doc li { margin-bottom: 4px; }
+.doc .lead { font-size: 18px; color: var(--muted); }
+.doc .meta { font-size: 14px; color: var(--muted); }
+.doc .note {
+  background: var(--soft); border-radius: 12px; padding: 14px 16px; margin: 0 0 14px; font-size: 15px;
+}
+.doc .note p:last-child { margin-bottom: 0; }
+.doc .toc { border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; margin: 20px 0 8px; }
+.doc .toc b { font-size: 14px; color: var(--muted); }
+.doc .toc ol { margin: 6px 0 0; }
+.doc .tbl-wrap { overflow-x: auto; margin: 0 0 14px; }
+.doc table { border-collapse: collapse; width: 100%; font-size: 15px; min-width: 460px; }
+.doc th, .doc td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.doc th:first-child, .doc td:first-child, .doc td.l, .doc th.l { text-align: left; }
+.doc th { font-size: 13px; font-weight: 500; color: var(--muted); }
+.doc details { border-top: 1px solid var(--line); padding: 12px 0; }
+.doc details:last-of-type { border-bottom: 1px solid var(--line); }
+.doc summary { cursor: pointer; font-weight: 700; }
+.doc details p { margin: 10px 0 0; }
+.doc .cta {
+  display: inline-block; margin-top: 8px; padding: 11px 18px; border-radius: 12px;
+  background: var(--accent); color: #fff; text-decoration: none; font-family: var(--font-display); font-size: 18px;
+}
+
+/* 사이트 공통 하단 */
+.site-foot {
+  max-width: 720px; margin: 22px auto 0; padding: 0 4px;
+  font-size: 13px; color: var(--muted); display: grid; gap: 6px;
+}
+.site-foot nav { display: flex; gap: 4px 14px; flex-wrap: wrap; }
+.site-foot a { color: inherit; }
+
+@media (max-width: 560px) {
+  main.doc { padding: 24px 18px; }
+  .doc h1 { font-size: 30px; }
+  .doc h2 { font-size: 21px; }
+}

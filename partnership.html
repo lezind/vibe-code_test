@@ -3,10 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>제휴 문의</title>
+  <title>제휴·문의 | 로또 패턴 분석실</title>
+  <meta name="description" content="로또 패턴 분석실에 제휴 제안, 오류 제보, 자료 문의를 보낼 수 있는 페이지입니다.">
+  <link rel="canonical" href="https://lezind.github.io/vibe-code_test/partnership.html">
   <meta name="google-adsense-account" content="ca-pub-6703071507858733">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6703071507858733"
-       crossorigin="anonymous"></script>
+  <!-- 콘텐츠가 아닌 양식 페이지라 광고 스크립트는 넣지 않는다 (AdSense 고품질 사이트 도움말 2부) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23c8102e'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='white' font-family='Arial' font-weight='700'%3E45%3C/text%3E%3C/svg%3E">
   <style>
     :root {
       --bg: #f6f7f9;
@@ -35,9 +37,10 @@
       margin: 0;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 32px 16px;
+      gap: 18px;
+      padding: 20px 16px 48px;
       background: var(--bg);
       color: var(--text);
       font-family: system-ui, -apple-system, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
@@ -92,15 +95,31 @@
     .status.ok { color: var(--ok); }
     .status.err { color: var(--err); }
     .hp { position: absolute; left: -9999px; }
-    .back { display: inline-block; margin-bottom: 12px; font-size: 0.85rem; color: var(--muted); text-decoration: none; }
-    .back:hover { color: var(--text); }
+    .site-nav, .site-foot { width: 100%; max-width: 520px; }
+    .site-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }
+    .site-nav .brand { font-weight: 800; font-size: 1.1rem; color: var(--text); text-decoration: none; }
+    .site-nav nav, .site-foot nav { display: flex; gap: 4px 14px; flex-wrap: wrap; }
+    .site-nav nav a { font-size: 0.9rem; color: var(--text); text-decoration: none; padding: 4px 10px; border-radius: 999px; border: 1px solid transparent; }
+    .site-nav nav a:hover { border-color: var(--border); }
+    .site-nav nav a[aria-current="page"] { border-color: var(--text); }
+    .site-foot { font-size: 0.8rem; color: var(--muted); display: grid; gap: 6px; }
+    .site-foot a, .consent a { color: inherit; }
   </style>
 </head>
 <body>
+  <header class="site-nav">
+    <a class="brand" href="./">로또 패턴 분석실</a>
+    <nav aria-label="사이트 메뉴">
+      <a href="./">분석</a>
+      <a href="guide.html">가이드</a>
+      <a href="about.html">소개</a>
+      <a href="partnership.html" aria-current="page">문의</a>
+    </nav>
+  </header>
+
   <main class="card">
-    <a class="back" href="./">← 처음으로</a>
-    <h1>제휴 문의</h1>
-    <p class="lead">제휴·협업 제안을 남겨주시면 검토 후 입력하신 이메일로 연락드리겠습니다.</p>
+    <h1>제휴·문의</h1>
+    <p class="lead">제휴·협업 제안, 오류 제보, 자료 문의를 남겨주시면 검토 후 입력하신 이메일로 연락드리겠습니다.</p>
 
     <form id="partnership-form" action="https://formspree.io/f/mdeeajdj" method="POST">
       <input type="hidden" name="_subject" value="[제휴 문의] 새 문의가 접수되었습니다">
@@ -148,13 +167,22 @@
 
       <label class="consent">
         <input type="checkbox" name="privacy_consent" value="동의" required>
-        <span>문의 응대를 위해 입력한 개인정보(이름, 이메일, 연락처)를 수집·이용하는 데 동의합니다. <span class="req">*</span></span>
+        <span>문의 응대를 위해 입력한 개인정보(이름, 이메일, 연락처)를 수집·이용하는 데 동의합니다. 답변 완료 후 1년간 보관하며, 자세한 내용은 <a href="privacy.html" target="_blank">개인정보처리방침</a>을 확인해 주세요. <span class="req">*</span></span>
       </label>
 
       <button type="submit">문의 보내기</button>
       <p class="status" id="status" role="status" aria-live="polite"></p>
     </form>
   </main>
+
+  <footer class="site-foot">
+    <nav aria-label="하단 메뉴">
+      <a href="about.html">사이트 소개</a>
+      <a href="guide.html">로또 가이드</a>
+      <a href="privacy.html">개인정보처리방침</a>
+    </nav>
+    <span>© 2026 로또 패턴 분석실</span>
+  </footer>
 
   <script>
     // JS가 켜져 있으면 페이지 이동 없이 전송, 꺼져 있으면 일반 POST로 Formspree 페이지에서 처리됨
