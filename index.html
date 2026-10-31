@@ -128,20 +128,21 @@
   .link { background: none; border: 0; padding: 4px 0; color: var(--accent); font-size: 14px; text-decoration: underline; text-underline-offset: 3px; }
 
   /* 추천 방식 */
-  .styles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .styles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
   .style-opt {
     text-align: left; border: 1.5px solid var(--line); background: transparent; border-radius: 12px;
     padding: 10px 12px; display: grid; gap: 2px;
   }
+  .style-opt { text-align: center; padding: 9px 6px; }
   .style-opt b { font-size: 15px; }
-  .style-opt span { font-size: 13px; color: var(--muted); line-height: 1.4; }
+  .style-desc { font-size: 14px; color: var(--muted); margin-top: -6px; }
   .style-opt[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
 
   /* 추천 게임 */
   .tickets { display: grid; border-top: 1px dashed var(--line); }
   .ticket { display: grid; grid-template-columns: 22px 1fr auto; gap: 6px 10px; align-items: center; padding: 12px 0; border-bottom: 1px dashed var(--line); }
   .ticket .tag { font-family: var(--font-mono); font-weight: 600; color: var(--accent); }
-  .ticket .meta { grid-column: 2 / -1; display: flex; gap: 6px; flex-wrap: wrap; }
+  .ticket .meta { grid-column: 2 / -1; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
   .chip { font-size: 12px; color: var(--muted); background: var(--soft); border-radius: 999px; padding: 2px 9px; font-variant-numeric: tabular-nums; }
   .hint { font-size: 14px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
   .hint::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; }
@@ -309,7 +310,7 @@
     .ball.sm { width: 28px; height: 28px; font-size: 12px; }
     .ball.lg { width: 60px; height: 60px; font-size: 24px; }
     .balls { gap: 4px; }
-    .styles { grid-template-columns: 1fr; }
+    .style-opt b { font-size: 14px; }
     .ticket { grid-template-columns: 18px 1fr; }
     .ticket .more { grid-column: 2; justify-self: start; }
     .two, .facts { grid-template-columns: 1fr; }
@@ -340,31 +341,27 @@
 
   <header class="top">
     <span class="eyebrow">LOTTO 6/45 · 1회 ~ <span id="last-no"></span>회 분석</span>
-    <h1>로또 패턴 분석실</h1>
-    <p class="sub">역대 당첨번호 <span id="draw-count"></span>회를 모두 살펴보고 번호를 골라 드려요. 번호를 누르면 그 번호가 언제 나왔는지 바로 볼 수 있어요.</p>
+    <h1>이번 주 로또 번호</h1>
+    <p class="sub">역대 <span id="draw-count"></span>회 당첨번호로 골라 드려요.</p>
   </header>
 
   <nav class="quick" aria-label="바로가기">
     <a href="#pick">추천 번호</a>
     <a href="#mine">내 번호 성적</a>
     <a href="#board">번호별 기록</a>
-    <a href="#really">정말 더 잘 맞을까</a>
-    <a href="#money">1,000원의 가치</a>
-    <a href="#facts-sec">재밌는 기록</a>
+    <a href="#really">정말 잘 맞을까?</a>
   </nav>
 
   <!-- 추천 -->
   <section class="card" id="pick" aria-labelledby="h-pick">
-    <div class="head">
-      <h2 id="h-pick">이번 주 추천 번호</h2>
-      <p class="sub">고르는 방식을 정하고 버튼을 누르세요.</p>
-    </div>
+    <h2 id="h-pick">추천 번호</h2>
     <div class="styles" id="styles" role="group" aria-label="추천 방식"></div>
+    <p class="style-desc" id="style-desc"></p>
     <div class="controls">
       <button class="btn primary" id="btn-rec" type="button">5게임 뽑기</button>
-      <button class="btn" id="btn-copy" type="button">번호 복사</button>
+      <button class="btn" id="btn-copy" type="button">복사</button>
     </div>
-    <p class="hint">번호 공을 누르면 그 번호의 기록이, 「역대 성적」을 누르면 이 조합으로 샀을 때 결과가 나와요.</p>
+    <p class="hint">공을 누르면 그 번호의 기록을 볼 수 있어요.</p>
     <div class="tickets" id="tickets"></div>
     <p class="toast" id="toast" aria-live="polite"></p>
     <details>
@@ -386,7 +383,7 @@
   <section class="card" id="mine" aria-labelledby="h-mine">
     <div class="head">
       <h2 id="h-mine">내 번호, 1회부터 매주 샀다면?</h2>
-      <p class="sub">평소 사는 번호 6개를 넣어 보세요. 역대 <span class="cnt"></span>회 모두와 맞춰 봅니다.</p>
+      <p class="sub">번호 6개를 넣고 맞춰 보세요.</p>
     </div>
     <form id="check-form" class="report">
       <div class="inputs" id="check-inputs"></div>
@@ -403,7 +400,7 @@
   <section class="card" id="board" aria-labelledby="h-board">
     <div class="head">
       <h2 id="h-board">번호별 기록</h2>
-      <p class="sub">공 아래 숫자는 그 번호가 나온 횟수예요. 궁금한 번호를 눌러 보세요.</p>
+      <p class="sub">공 아래 숫자는 나온 횟수예요.</p>
     </div>
     <div class="seg" id="board-seg" role="group" aria-label="기간">
       <button type="button" data-k="all" aria-pressed="true">전체 기간</button>
@@ -412,10 +409,10 @@
     <div class="board" id="board-grid"></div>
     <p class="small" id="board-note"></p>
     <div class="two">
-      <div><h3>요즘 자주 나오는 번호</h3><p class="small">최근 50회 기준</p><div class="numlist" id="hot"></div></div>
-      <div><h3>오래 안 나온 번호</h3><p class="small">마지막으로 나온 뒤 지난 회차</p><div class="numlist" id="cold"></div></div>
+      <div><h3>요즘 자주 나와요 <span class="small">최근 50회</span></h3><div class="numlist" id="hot"></div></div>
+      <div><h3>오래 쉬고 있어요 <span class="small">쉰 회차</span></h3><div class="numlist" id="cold"></div></div>
     </div>
-    <p class="small">"자주 나왔으니 또 나온다"도, "안 나왔으니 곧 나온다"도 근거는 없어요. 추첨 공은 지난 결과를 기억하지 못하거든요.</p>
+    <p class="small">추첨 공은 지난 결과를 기억하지 못해요. 둘 다 다음 회차와는 무관해요.</p>
     <details id="freq-details">
       <summary>막대그래프로 보기</summary>
       <div class="inner">
@@ -441,20 +438,17 @@
       <div class="stamp">아니요,<br>똑같아요</div>
       <p class="answer" id="really-answer"></p>
     </div>
-    <div>
-      <h3>한 장에 평균 몇 개 맞았나</h3>
-      <p class="small">지난 300회 동안 매주 5게임씩 산 결과예요. 막대 길이가 거의 같죠?</p>
-    </div>
+    <p class="small">한 장에 평균 맞힌 개수 · 지난 300회</p>
     <div class="bars" id="bars"></div>
-    <p class="small">어떻게 실험했나: 매 회차마다 <b>그 전까지의 당첨번호만</b> 보고 번호를 고른 뒤, 실제 결과와 맞춰 봤어요. 미래 결과를 미리 보고 고르는 반칙은 없어요. 이걸 <span id="run-count"></span>번 반복했어요.</p>
-    <div class="progress" id="bt-prog" hidden><i></i></div>
-    <div class="controls">
-      <button class="btn" id="btn-bt" type="button">직접 한 번 더 실험하기</button>
-      <span class="small" id="bt-status"></span>
-    </div>
     <details id="bt-details">
-      <summary>자세한 실험 결과 보기</summary>
+      <summary>실험 방법과 자세한 결과</summary>
       <div class="inner">
+        <p class="small">매 회차마다 <b>그 전까지의 당첨번호만</b> 보고 5게임을 고른 뒤 실제 결과와 맞춰 봤어요. 미래 결과를 미리 보는 반칙은 없어요. 이걸 <span id="run-count"></span>번 반복했어요.</p>
+        <div class="progress" id="bt-prog" hidden><i></i></div>
+        <div class="controls">
+          <button class="btn" id="btn-bt" type="button">직접 한 번 더 실험하기</button>
+          <span class="small" id="bt-status"></span>
+        </div>
         <p class="small">점 하나가 실험 한 번이에요. 회색 띠는 아무렇게나 산 사람 300명 가운데 90%가 들어간 범위인데, 분석 결과도 대부분 이 안에 있어요.</p>
         <svg class="chart" id="bt-chart" role="img" aria-label="전략별 5등 이상 당첨 횟수와 무작위 구매자 범위"></svg>
         <div class="tbl-wrap">
@@ -476,10 +470,10 @@
     </div>
     <div class="won-bar" id="won-bar" role="img" aria-label="1,000원 중 등수별 기대 금액"></div>
     <div class="won-legend" id="won-legend"></div>
-    <p class="small" id="money-note"></p>
     <details>
       <summary>등수별 확률 표 보기</summary>
       <div class="inner">
+        <p class="small" id="money-note"></p>
         <div class="tbl-wrap">
           <table>
             <thead><tr><th>등수</th><th>맞춰야 하는 것</th><th>확률</th><th>평균 상금</th><th>1,000원당</th></tr></thead>
@@ -496,14 +490,15 @@
       <h2 id="h-facts"><span class="cnt"></span>회 동안 있었던 일</h2>
     </div>
     <div class="facts" id="facts"></div>
+    <details>
+      <summary>기록 더 보기</summary>
+      <div class="inner"><div class="facts" id="facts-more"></div></div>
+    </details>
   </section>
 
   <!-- 깊은 통계 -->
   <section class="card" aria-labelledby="h-deep">
-    <div class="head">
-      <h2 id="h-deep">더 깊은 통계</h2>
-      <p class="sub">숫자를 좋아하는 분들을 위한 공간이에요.</p>
-    </div>
+    <h2 id="h-deep">더 깊은 통계</h2>
     <details id="sum-details">
       <summary>당첨번호 6개를 더하면 보통 얼마일까?</summary>
       <div class="inner">
@@ -541,9 +536,9 @@
       <a href="privacy.html">개인정보처리방침</a>
       <a href="partnership.html">제휴 문의</a>
     </nav>
-    <span>데이터: 동행복권이 공개한 역대 당첨번호(1~<span class="cnt-no"></span>회, <span id="last-date"></span> 추첨분까지). 상금·당첨자 수는 동행복권 결과를 모아 둔 공개 저장소 <a href="https://github.com/smok95/lotto" target="_blank" rel="noopener">smok95/lotto</a> 기준이며, 두 자료의 당첨번호가 일치하는지 대조했습니다.</span>
-    <span>어떤 번호든 1등 확률은 8,145,060분의 1로 같아요. 재미로만 즐겨 주세요. 규칙과 확률이 궁금하다면 <a href="guide.html">로또 가이드</a>를 읽어 보세요.</span>
-    <span>이 사이트는 동행복권과 관련이 없는 개인 정보 사이트입니다. 당첨 확인은 동행복권 공식 홈페이지에서 해 주세요. 로또는 만 19세 이상만 구매할 수 있습니다.</span>
+    <span>데이터: 동행복권 공개 당첨번호 1~<span class="cnt-no"></span>회(<span id="last-date"></span>까지), 상금은 <a href="https://github.com/smok95/lotto" target="_blank" rel="noopener">smok95/lotto</a> 기준.</span>
+    <span>어떤 번호든 1등 확률은 8,145,060분의 1로 같아요. 재미로만 즐겨 주세요.</span>
+    <span>동행복권과 관련 없는 개인 사이트예요. 당첨 확인은 동행복권 공식 홈페이지에서, 구매는 만 19세 이상만 가능해요.</span>
     <span>© 2026 로또 패턴 분석실</span>
   </footer>
 </main>
@@ -917,20 +912,26 @@ if (typeof module !== 'undefined') module.exports = Engine;
   }
 
   // ---------- 추천 ----------
+  // 버튼에는 짧은 이름만, 설명은 고른 방식 하나만 아래 한 줄로
   const STYLE_TEXT = {
-    hot: ['자주 나온 번호 위주', '최근 50회에 많이 나온 번호를 우선해요'],
-    cold: ['오래 쉰 번호 위주', '한동안 안 나온 번호를 우선해요'],
-    balance: ['골고루 섞기', '합계·홀짝이 흔한 모양에 가깝게'],
+    balance: ['골고루', '합계·홀짝이 흔한 모양에 가깝게 골라요.'],
+    hot: ['자주 나온 번호', '최근 50회에 많이 나온 번호를 우선해요.'],
+    cold: ['오래 쉰 번호', '한동안 안 나온 번호를 우선해요.'],
   };
   let style = 'balance', current = [];
-  for (const [k, [name, desc]] of Object.entries(STYLE_TEXT)) {
+  const setStyle = k => {
+    style = k;
+    document.querySelectorAll('.style-opt').forEach(x => x.setAttribute('aria-pressed', x.dataset.k === k));
+    $('style-desc').textContent = STYLE_TEXT[k][1];
+  };
+  for (const [k, [name]] of Object.entries(STYLE_TEXT)) {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'style-opt'; b.dataset.k = k; b.id = 'style-' + k;
-    b.setAttribute('aria-pressed', k === style);
-    b.innerHTML = `<b>${name}</b><span>${desc}</span>`;
-    b.onclick = () => { style = k; document.querySelectorAll('.style-opt').forEach(x => x.setAttribute('aria-pressed', x.dataset.k === k)); renderPick(true); };
+    b.innerHTML = `<b>${name}</b>`;
+    b.onclick = () => { setStyle(k); renderPick(true); };
     $('styles').appendChild(b);
   }
+  setStyle(style);
   function seed() { try { const u = new Uint32Array(1); crypto.getRandomValues(u); return u[0]; } catch { return (Math.random() * 2 ** 32) >>> 0; } }
   const sumWord = s => s < 100 ? '작은 편' : s > 175 ? '큰 편' : '보통';
   function renderPick(animate) {
@@ -940,7 +941,7 @@ if (typeof module !== 'undefined') module.exports = Engine;
       return `<div class="ticket"><span class="tag">${'ABCDE'[i]}</span>
         <div class="balls">${c.t.map(n => ballBtn(n, animate ? 'pop' : '')).join('')}</div>
         <button type="button" class="link more" data-combo="${c.t.join(',')}">역대 성적 ›</button>
-        <div class="meta"><span class="chip">합계 ${s.sum} (${sumWord(s.sum)})</span><span class="chip">홀수 ${s.odd} · 짝수 ${6 - s.odd}</span><span class="chip">작은 수 ${s.low} · 큰 수 ${6 - s.low}</span></div></div>`;
+        <div class="meta">합계 ${s.sum}(${sumWord(s.sum)}) · 홀짝 ${s.odd}:${6 - s.odd}</div></div>`;
     }).join('');
     if (animate) $('tickets').querySelectorAll('.ticket').forEach((row, r) =>
       row.querySelectorAll('.ball').forEach((b, i) => (b.style.animationDelay = (r * 60 + i * 40) + 'ms')));
@@ -974,7 +975,8 @@ if (typeof module !== 'undefined') module.exports = Engine;
   }
   $('check-form').addEventListener('submit', e => { e.preventDefault(); checkMine(); });
   $('btn-use-a').onclick = () => { setInputs(current[0].t); checkMine(); };
-  setInputs(current[0].t); checkMine();
+  // 첫 화면이 길어지지 않게 예시 번호만 채워 두고, 성적표는 누를 때 보여 준다
+  setInputs(current[0].t);
 
   // ---------- 번호판 ----------
   const NUMS = Array.from({ length: 45 }, (_, i) => i + 1);
@@ -982,7 +984,7 @@ if (typeof module !== 'undefined') module.exports = Engine;
     const vals = k === 'all' ? ST.freq : ST.recent, avg = (k === 'all' ? N : 50) * 6 / 45;
     const top = NUMS.slice().sort((a, b) => vals[b] - vals[a]).slice(0, 6);
     $('board-grid').innerHTML = NUMS.map(n => `<div class="cell">${ballBtn(n)}<small class="${top.includes(n) ? 'up' : ''}">${vals[n]}</small></div>`).join('');
-    $('board-note').textContent = `빨간 숫자는 ${k === 'all' ? '전체 기간' : '최근 50회'}에 가장 많이 나온 6개예요. 번호당 평균은 ${avg.toFixed(1)}번이에요.`;
+    $('board-note').textContent = `빨간 숫자 = 가장 많이 나온 6개 · 평균 ${avg.toFixed(1)}번`;
   }
   $('board-seg').querySelectorAll('button').forEach(b => (b.onclick = () => {
     $('board-seg').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
@@ -1036,9 +1038,7 @@ if (typeof module !== 'undefined') module.exports = Engine;
   }
   function renderReally() {
     const A = aggregate(), T = A.tickets, expHits = T * P3;
-    const model = A.rows.filter(r => r.key !== 'random'), rnd = A.rows.find(r => r.key === 'random');
-    const best = model.slice().sort((a, b) => b.hits - a.hits)[0];
-    $('really-answer').innerHTML = `분석해서 고른 번호도, 아무렇게나 고른 번호도 <b>맞히는 개수가 같았어요.</b> 지난 300회 동안 매주 5게임씩 샀다면 5등 이상은 어느 방식이든 약 ${Math.round(expHits)}번 당첨돼요. 가장 나았던 「${best.label}」도 ${best.hits.toFixed(0)}번으로, 그냥 운의 차이 정도예요.`;
+    $('really-answer').innerHTML = `분석한 번호도, 아무렇게나 고른 번호도 <b>맞히는 개수는 같았어요.</b> 어느 방식이든 300회 동안 5등 이상은 약 ${Math.round(expHits)}번이에요.`;
     $('bars').innerHTML = A.rows.map(r => `<div class="b ${r.key === 'random' ? 'rand' : ''}"><span>${r.label}</span>
       <div class="track"><div class="fill" style="width:${(r.avg / 1.2 * 100).toFixed(1)}%"></div></div><span class="v">${r.avg.toFixed(2)}개</span></div>`).join('') +
       `<div class="b"><span class="small">수학적 기대값</span><div class="track"><div class="fill" style="width:${(0.8 / 1.2 * 100).toFixed(1)}%;background:var(--accent);opacity:.5"></div></div><span class="v">0.80개</span></div>`;
@@ -1149,7 +1149,10 @@ if (typeof module !== 'undefined') module.exports = Engine;
       ['1등 없이 넘어간 회차', `${F.noWinner.count}번`, `마지막은 ${F.noWinner.last}회. 요즘은 사는 사람이 많아 거의 매주 1등이 나와요.`],
       ['지금까지 1등이 된 사람', `${fmt(F.totalWinners)}명`, `1회부터 ${N}회까지 1등 당첨자를 모두 더한 숫자예요.`],
     ];
-    $('facts').innerHTML = cards.map(([k, v, t]) => `<div class="fact"><span class="k">${k}</span><span class="v">${v}</span><p>${t}</p></div>`).join('');
+    // 처음엔 4개만, 나머지는 "기록 더 보기" 안에
+    const card = ([k, v, t]) => `<div class="fact"><span class="k">${k}</span><span class="v">${v}</span><p>${t}</p></div>`;
+    $('facts').innerHTML = cards.slice(0, 4).map(card).join('');
+    $('facts-more').innerHTML = cards.slice(4).map(card).join('');
   })();
 
   // ---------- 깊은 통계 ----------
